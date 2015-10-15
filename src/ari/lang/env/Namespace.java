@@ -7,43 +7,120 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Michael on 12/10/2015.
+ * <p><tt>Namespace</tt> - Oct. 12, 2015</p>
  *
+ * <p>The <tt>Namespace</tt> class simply makes an easy organization
+ * of 'presences' that are within the environment. The class
+ * controls the <tt>DataType</tt>s, <tt>Function</tt>s and
+ * <tt>Namespace</tt>s defined for a namespace.</p>
+ *
+ * @see Defined
+ * @see Dumpable
+ * @see Environment
+ *
+ * @author Michael van Dyk
  */
-public final class Namespace implements Dumpable {
+public final class Namespace extends Defined implements Dumpable {
 
-    public static final String EMPTY_NAMESPACE = "";
+    /**
+     *   The name of the main subspace, namespace is removed from
+     * path as only this namespace is the only one at the top level.
+     */
+    public static final String EMPTY_NAMESPACE = "ari";
 
-    private final String name;
+    private final Map<String, Namespace>    subspaces;  // The subspaces of this current namespace
+    private final Map<String, DataType>     types;      // The types define in this namespace
 
-    private final Map<String, Namespace> subspaces;
-    private final Map<String, DefinedType> types;
-
-    public Namespace(String name) {
-        this.name = name;
-        types = new HashMap<String, DefinedType>();
+    /**
+     * Defines a new namespace
+     * @param name      name of the namespace
+     * @param namespace the path to the space (namespace of the namespace)
+     */
+    public Namespace(String name, String namespace) {
+        super(name, namespace);
+        types = new HashMap<String, DataType>();
         subspaces = new HashMap<String, Namespace>();
     }
 
-    protected  void addType(String name, DefinedType type) {
-        types.put(name, type);
+    /**
+     * Defines a new type in the specified namespace.
+     * @param name the name of namespace to add to
+     * @param path the namespace of the namespace
+     * @param type the type to add
+     */
+    protected void addType(String name, String path, DataType type) {
+        if (!Util.isAlpha(name)) {
+            throw new DataType.InvalidTypeIDException(name);
+        }
+
+        Namespace add_to = path.equals(EMPTY_NAMESPACE) ? this : getSubspace(path);
+
+        if (add_to.types.containsKey(name)) {
+            //TODO error
+        }
+
+        add_to.types.put(name, type);
     }
 
-    protected boolean hasType(String name) {
-        return (types.containsKey(name));
+    /**
+     * Checks of the type exists given the fullname of the type.
+     * @see Defined#fullname()
+     * @param fullname the fullname of the type
+     * @return true if the type does exist, false otherwise
+     */
+    protected boolean hasType(String fullname) {
+        return (getType(fullname) != null);
     }
 
-    protected DefinedType getType(String name) {
-        return (types.get(name));
+    /**
+     * Gets the type with the given fullname.
+     * @see Defined#fullname()
+     * @param fullname the fullname of the type
+     * @return the type if exists, null if not
+     */
+    protected DataType getType(String fullname) {
+        int last = fullname.lastIndexOf('.');
+
+        if (last == -1) {
+            return (types.get(fullname));
+        } else {
+            String path = fullname.substring(0, last);
+            String type = fullname.substring(last + 1);
+
+            return (getSubspace(path).types.get(type));
+        }
     }
 
-    protected void newSubspace(String subspace) {
-        if (!subspaces.containsKey(subspace))
-            subspaces.put(subspace, new Namespace(subspace));
+    protected void newSubspace(String subspace, String namespace) {
+        if (!Util.isAlpha(subspace)) {
+            throw new Namespace.InvalidNamespaceIDException(subspace);
+        }
+
+        Namespace curr;
+        if (!namespace.equals(Namespace.EMPTY_NAMESPACE)) {
+            curr = getSubspace(namespace);
+        } else {
+            curr = this;
+        }
+        if (!curr.subspaces.containsKey(subspace))
+            curr.subspaces.put(subspace, new Namespace(subspace, namespace));
     }
 
     protected Namespace getSubspace(String subspace) {
-        return (subspaces.get(subspace));
+        if (!Namespace.validNamespaceChain(subspace)) {
+            throw new Namespace.InvalidNamespaceIDException(subspace);
+        }
+
+        int index;
+        if ((index = subspace.indexOf('.')) != -1) {
+            String lead = subspace.substring(0, index);
+
+            if (lead.equals(EMPTY_NAMESPACE))
+                return getSubspace(subspace.substring(index + 1));
+            return (subspaces.get(lead).getSubspace(subspace.substring(index + 1)));
+        } else {
+            return (subspace.equals(EMPTY_NAMESPACE) ? this : subspaces.get(subspace));
+        }
     }
 
     @Override
@@ -54,10 +131,10 @@ public final class Namespace implements Dumpable {
             tab += DUMP_TAB;
         }
 
-        String dump = tab + "#" + name + ":";
+        String dump = tab + "#" + name() + ":";
         String contents = "";
 
-        for (DefinedType d : types.values()) {
+        for (DataType d : types.values()) {
             contents += "\n" + d.dump(level + 1);
         }
 
@@ -73,6 +150,24 @@ public final class Namespace implements Dumpable {
         return (dump);
     }
 
+    @Override
+    public String subdump() {
+        String ret = "";
+
+        for (Namespace n : subspaces.values())
+            ret += n.dump(0) + "\n\n";
+
+        return (ret);
+    }
+
+    /**
+     * Checks if the given string is a valid namespace chain,
+     * meaning that could the given string represent a namespace
+     * and its location in the namespace hierarchy.
+     *
+     * @param namespace the given string to check
+     * @return true if the string is valid, false otherwise
+     */
     public static boolean validNamespaceChain(String namespace) {
         boolean last_alpha = false;
 

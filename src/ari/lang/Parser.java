@@ -1,6 +1,6 @@
 package ari.lang;
 
-import ari.lang.env.DefinedType;
+import ari.lang.env.DataType;
 import ari.lang.env.Environment;
 import ari.lang.env.Namespace;
 import ari.misc.InstantiationException;
@@ -50,11 +50,11 @@ public final class Parser {
                     break;
                 case '~':
                     if ((sep = findAtLevel(script, 0, SEPARATOR)) == FIND_FAIL) {
-                        throw new DefinedType.InvalidTypeDeclarationException("separator \'" + SEPARATOR + "\' not found");
+                        throw new DataType.InvalidTypeDeclarationException("separator \'" + SEPARATOR + "\' not found");
                     }
 
                     if ((term = findAtLevel(script, sep, TERMINATOR)) == FIND_FAIL) {
-                        throw new DefinedType.InvalidTypeDeclarationException("terminator \'" + TERMINATOR + "\' not found");
+                        throw new DataType.InvalidTypeDeclarationException("terminator \'" + TERMINATOR + "\' not found");
                     }
 
                     {

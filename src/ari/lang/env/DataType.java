@@ -2,28 +2,21 @@ package ari.lang.env;
 
 import ari.misc.Dumpable;
 
+import javax.xml.crypto.Data;
+
 /**
  * Created by Michael on 12/10/2015.
  *
  */
-public final class DefinedType implements Dumpable {
+public final class DataType extends Defined implements Dumpable {
 
-    private final String name;
-    private final String namespace;
     private final String[] attribute_ids;
-    private final DefinedType[] attribute_types;
+    private final DataType[] attribute_types;
 
-    public DefinedType(String name, String namespace, String[] ids, DefinedType[] types) {
-        this.name = name;
-        this.namespace = namespace;
+    public DataType(String name, String namespace, String[] ids, DataType[] types) {
+        super(name, namespace);
         this.attribute_ids = ids;
         this.attribute_types = types;
-    }
-
-    public String getFullName() {
-        if (!namespace.equals(""))
-            return (namespace + "." + name);
-        return (name);
     }
 
     @Override
@@ -34,11 +27,11 @@ public final class DefinedType implements Dumpable {
             tab += DUMP_TAB;
         }
 
-        String dump = tab + "~" + name + ":";
+        String dump = tab + "~" + name() + ":";
         String contents = "";
 
         for (int i=0; i< attribute_ids.length; ++i) {
-            contents += " " + attribute_ids[i] + "|" + attribute_types[i].getFullName();
+            contents += " " + attribute_ids[i] + "|" + attribute_types[i].fullname();
             if (i != attribute_ids.length - 1)
                 contents += ",";
         }
@@ -48,19 +41,27 @@ public final class DefinedType implements Dumpable {
         return (dump);
     }
 
-    public static abstract class DefinedTypeException extends RuntimeException {
-        public DefinedTypeException(String message) {
+    @Override
+    public String subdump() {
+        String ret = "";
+        for (DataType dt : attribute_types)
+            ret += dt.dump(0) + "\n\n";
+        return (ret);
+    }
+
+    public static abstract class DataTypeException extends RuntimeException {
+        public DataTypeException(String message) {
             super(message);
         }
     }
 
-    public static final class InvalidTypeIDException extends DefinedTypeException {
+    public static final class InvalidTypeIDException extends DataTypeException {
         public InvalidTypeIDException(String name) {
             super("invalid name for a type : \'" + name + "\'\nmust be alpha characters only");
         }
     }
 
-    public static final class InvalidTypeDeclarationException extends DefinedTypeException {
+    public static final class InvalidTypeDeclarationException extends DataTypeException {
         public InvalidTypeDeclarationException(String message) {
             super("invalid type declaration: " + message);
         }

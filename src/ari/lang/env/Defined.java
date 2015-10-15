@@ -1,5 +1,7 @@
 package ari.lang.env;
 
+import ari.misc.Dumpable;
+
 /**
  * <p><tt>Defined</tt> - Oct. 14, 2015</p>
  *
@@ -14,7 +16,7 @@ package ari.lang.env;
  *
  * @author Michael van Dyk
  */
-public abstract class Defined {
+public abstract class Defined implements Dumpable {
 
     private final String    name;       // The name of the Defined
     private final String    namespace;  // The namespace of the Defined
@@ -35,7 +37,7 @@ public abstract class Defined {
      * @return the full name of the <tt>Defined</tt>
      */
     public final String fullname() {
-        if (namespace.equals(""))
+        if (namespace.equals(Namespace.EMPTY_NAMESPACE))
             return (name);
         return (namespace + "." + name);
     }
@@ -56,4 +58,11 @@ public abstract class Defined {
         return (namespace);
     }
 
+    /**
+     * @return the dump(0) of the <tt>Defined</tt>
+     */
+    @Override
+    public final String toString() {
+        return (dump(0));
+    }
 }
