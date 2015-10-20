@@ -1,4 +1,4 @@
-# Trajan Script
+# Puella Script
 A script parser and evaluator for a scripting language that I have thought of. This is for educational purposes.
 
 ### Syntax
