@@ -1,4 +1,4 @@
-package ari.misc;
+package puel.misc;
 
 /**
  * Created by Michael on 13/10/2015.

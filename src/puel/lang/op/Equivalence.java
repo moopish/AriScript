@@ -1,7 +1,7 @@
-package ari.lang.op;
+package puel.lang.op;
 
-import ari.lang.*;
-import ari.lang.Boolean;
+import puel.lang.*;
+import puel.lang.Boolean;
 
 /**
  * Created by Michael on 10/10/2015.

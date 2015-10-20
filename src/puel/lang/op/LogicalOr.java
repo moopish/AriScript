@@ -1,16 +1,16 @@
-package ari.lang.op;
+package puel.lang.op;
 
-import ari.lang.*;
-import ari.lang.Boolean;
+import puel.lang.*;
+import puel.lang.Boolean;
 
 /**
  * Created by Michael on 10/10/2015.
  *
  */
-public final class LogicalAnd extends BinaryOperation {
+public final class LogicalOr extends BinaryOperation {
 
-    public LogicalAnd(Expression left, Expression right) {
-        super(Operator.AND, left, right);
+    public LogicalOr(Expression left, Expression right) {
+        super(Operator.OR, left, right);
     }
 
     @Override
@@ -19,7 +19,7 @@ public final class LogicalAnd extends BinaryOperation {
         Expression right = getRightOperand().evaluate();
 
         if (left instanceof Boolean && right instanceof Boolean) {
-            return (((Boolean) left).and((Boolean) right));
+            return (((Boolean) left).or((Boolean) right));
         } else {
             throw new UnsupportedBinaryOperationException(left, right, operator());
         }

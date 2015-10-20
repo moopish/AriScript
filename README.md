@@ -32,7 +32,7 @@ of the type specified for that attribute in the definition:
 #### Namespaces
 
 <p>Namespaces are represented with the '<tt>#</tt>' character. All namespaces are stored with in the 
-main namespace '<tt>ari</tt>'.</p>
+main namespace '<tt>puella</tt>'.</p>
 
 ##### Defining
 

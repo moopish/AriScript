@@ -1,7 +1,7 @@
-package ari.lang.env;
+package puel.lang.env;
 
-import ari.misc.Dumpable;
-import ari.misc.Util;
+import puel.misc.Dumpable;
+import puel.misc.Util;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +26,7 @@ public final class Namespace extends Defined implements Dumpable {
      *   The name of the main subspace, namespace is removed from
      * path as only this namespace is the only one at the top level.
      */
-    public static final String EMPTY_NAMESPACE = "ari";
+    public static final String EMPTY_NAMESPACE = "puella";
 
     private final Map<String, Namespace>    subspaces;  // The subspaces of this current namespace
     private final Map<String, DataType>     types;      // The types define in this namespace

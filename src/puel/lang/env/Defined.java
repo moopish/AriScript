@@ -1,6 +1,6 @@
-package ari.lang.env;
+package puel.lang.env;
 
-import ari.misc.Dumpable;
+import puel.misc.Dumpable;
 
 /**
  * <p><tt>Defined</tt> - Oct. 14, 2015</p>

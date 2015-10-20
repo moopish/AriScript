@@ -1,9 +1,9 @@
-package ari.lang;
+package puel.lang;
 
-import ari.lang.env.DataType;
-import ari.lang.env.Environment;
-import ari.lang.env.Namespace;
-import ari.misc.InstantiationException;
+import puel.lang.env.DataType;
+import puel.lang.env.Environment;
+import puel.lang.env.Namespace;
+import puel.misc.InstantiationException;
 
 
 /**
