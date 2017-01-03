@@ -1,6 +1,8 @@
 # Puella Script
 A script parser and evaluator for a scripting language that I have thought of. This is for educational purposes.
 
+Has not been worked on for a while, not complete.
+
 ### Syntax
 
 <p>In this section, unless stated otherwise, {words} represents an idea of what goes in that location. The '{' and '}'
